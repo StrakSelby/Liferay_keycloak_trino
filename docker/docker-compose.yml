@@ -1,0 +1,67 @@
+---
+services:
+  liferay:
+    image: liferay/portal:7.4.3.19-ga19
+    container_name: tomcat
+    networks:
+      - liferay's_network
+    depends_on:
+      - mariadb
+    environment:
+      LIFERAY_JVM_OPTS: -Xms8g -Xmx8g -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+      LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME: org.mariadb.jdbc.Driver
+      LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL: "jdbc:mariadb://mariadb:3306/liferay?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false"
+      LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME: root
+      LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD: liferay
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    volumes:
+      - ./mount:/mnt/liferay
+      - liferay-data:/opt/liferay/data
+      - liferay-osgi-configs:/opt/liferay/osgi/configs
+      - liferay-osgi-marketplace:/opt/liferay/osgi/marketplace
+      - liferay-osgi-modules:/opt/liferay/osgi/modules
+      - liferay-osgi-war:/opt/liferay/osgi/war
+
+  mariadb:
+    image: mariadb:10.6
+    container_name: mariadb
+    networks:
+      - liferay's_network
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: liferay
+      MYSQL_DATABASE: liferay
+      MYSQL_USER: liferay
+      MYSQL_PASSWORD: liferay
+    ports:
+      - 3307:3306
+    volumes:
+      - mariadb-data:/var/lib/mysql
+  
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.5
+    container_name: keycloak
+    networks:
+      - liferay's_network
+    ports:
+      - 8081:8081
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    command: start-dev
+    restart: unless-stopped
+
+networks:
+  liferay's_network:
+    dirver: bridge
+
+volumes:
+  liferay-data:
+  liferay-osgi-configs:
+  liferay-osgi-marketplace:
+  liferay-osgi-modules:
+  liferay-osgi-war:
+  mariadb-data:
