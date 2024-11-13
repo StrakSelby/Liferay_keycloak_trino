@@ -2,7 +2,7 @@
 services:
   liferay:
     image: liferay/portal:7.4.3.19-ga19
-    container_name: tomcat
+    container_name: liferay
     networks:
       - liferay's_network
     depends_on:
@@ -24,6 +24,7 @@ services:
       - liferay-osgi-marketplace:/opt/liferay/osgi/marketplace
       - liferay-osgi-modules:/opt/liferay/osgi/modules
       - liferay-osgi-war:/opt/liferay/osgi/war
+    restart: unless-stopped
 
   mariadb:
     image: mariadb:10.6
@@ -40,6 +41,7 @@ services:
       - 3307:3306
     volumes:
       - mariadb-data:/var/lib/mysql
+    restart: unless-stopped
   
   keycloak:
     image: quay.io/keycloak/keycloak:26.0.5
@@ -48,10 +50,15 @@ services:
       - liferay's_network
     ports:
       - 8081:8081
+    expose:
+      - 8081
     environment:
+      KC_HOSTNAME: localhost
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-    command: start-dev
+      KC_HOSTNAME_PORT: 8081
+      KC_LOG_LEVEL: info
+    command:  ["start-dev", "--http-port", "8081"]
     restart: unless-stopped
 
 networks:
