@@ -1,0 +1,95 @@
+services:
+  liferay:
+    image: liferay/portal:7.4.3.19-ga19
+    container_name: liferay
+    networks:
+      - liferay's_network
+    ports:
+      - 8080:8080
+      - 8000:8000
+      - 11311:11311
+    expose:
+      - 8080
+    environment:
+      LIFERAY_JVM_OPTS: -Xms8g -Xmx8g -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+      LIFERAY_JDBC_DEFAULT_DRIVER_CLASS_NAME: org.postgresql.Driver
+      LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL: "jdbc:postgresql://postgresql:5432/${POSTGRES_USER_DATABASE}?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false"
+      LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME: ${DATABASE_USERNAME}
+      LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - liferay-data:/opt/liferay/data
+      - liferay-osgi-configs:/opt/liferay/osgi/configs
+      - liferay-osgi-marketplace:/opt/liferay/osgi/marketplace
+      - liferay-osgi-modules:/opt/liferay/osgi/modules
+      - liferay-osgi-war:/opt/liferay/osgi/war
+    depends_on:
+      - postgres
+    restart: on-failure
+
+  mariadb:
+    image: mariadb:10.6
+    container_name: keycloakDB
+    networks:
+      - liferay's_network
+    environment:
+      MYSQL_ROOT_USER: ${KEYCLOAK_ROOT_USER}
+      MYSQL_ROOT_PASSWORD: ${KEYCLOAK_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${KEYCLOAK_DATABASE}
+      MYSQL_USER: ${KEYCLOAK_DATABASE_USER}     
+      MYSQL_PASSWORD: ${KEYCLOAK_MYSQL_PASSWORD}
+    ports:
+      - 3306:3306
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    restart: on-failure
+  
+  postgres:
+    image: postgres:15.1
+    container_name: postgresql
+    networks:
+      - liferay's_network
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_USER_PASS}
+      POSTGRES_USERNAME: ${POSTGRES_USER_USERNAME}
+      POSTGRES_DB: ${POSTGRES_USER_DATABASE}
+    ports: 
+      - 5434:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: on-failure
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.5
+    container_name: keycloak
+    networks:
+      - liferay's_network
+    ports:
+      - 8081:8081
+    environment:
+      KC_DB: ${KEYCLOAK_CONNECTION}
+      KC_DB_USERNAME: ${KEYCLOAK_DATABASE_USER}
+      KC_DB_PASSWORD: ${KEYCLOAK_DATABASE_PASSWORD}
+      KC_DB_URL_HOST: ${KEYCLOAK_DATABASE_HOST}
+      KC_DB_URL_PORT: 3306
+      KC_DB_URL_DATABASE: ${KEYCLOAK_DATABASE}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_HOSTNAME_PORT: 8081
+      KC_LOG_LEVEL: info
+    command:  ["start-dev", "--http-port", "8081"]
+    depends_on:
+      - mariadb
+    restart: on-failure
+
+networks:
+  liferay's_network:
+    driver: bridge
+
+volumes:
+  liferay-data:
+  liferay-osgi-configs:
+  liferay-osgi-marketplace:
+  liferay-osgi-modules:
+  liferay-osgi-war:
+  mariadb-data:
+  pgdata:
