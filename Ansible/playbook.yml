@@ -1,0 +1,8 @@
+- name: Running-playbook
+  gather_facts: false
+  hosts: localhost
+  roles:
+    - role: deploy-to-cluster
+      tags: deploy
+    # - roles:
+    #   tags: 

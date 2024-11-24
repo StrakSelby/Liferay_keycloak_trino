@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: liferay-deployment
+  namespace: default
+  labels:
+    app: liferay
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: liferay
+  template:
+    metadata:
+      labels:
+        app: liferay
+    spec:
+      containers:
+      - name: liferay
+        image: liferay/portal:7.4.3.19-ga19
+        ports: 
+          - containerPort: 8080
+        env:
+          - name: LIFERAY_JVM_OPTS
+            value: -Xms8g -Xmx8g -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+          - name: LIFERAY_JDBC_DEFAULT_DRIVER_CLASS_NAME
+            value: org.postgresql.Driver
+          - name: LIFERAY_JDBC_DEFAULT_URL
+            valueFrom:
+              configMapKeyRef:
+                name: db_url
+                key: DB_URL
+          - name: LIFERAY_JDBC_DEFAULT_USERNAME
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "500m"
+          limits:
+            memory: "500Mi"
+            cpu: "500m"
+        volumeMounts:
+          - name: apache-template
+            mountPath: /etc/apache2/sites-available/000-default.conf
+            subPath: 000-default.conf
+          - name: port-template
+            mountPath: /etc/apache2/ports.conf
+            subPath: ports.conf
+      volumes:
+        - name: apache-template
+          configMap:
+            name: apache-template
+        - name: port-template
+          configMap:
+            name: port-template
