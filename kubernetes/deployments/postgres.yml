@@ -44,6 +44,6 @@ spec:
             - name: pgdata
               mountPath: /var/lib/postgresql/data
       volumes:
-        - name: mongo-data
+        - name: pgdata
           persistentVolumeClaim:
             claimName: pgdata-pvc
