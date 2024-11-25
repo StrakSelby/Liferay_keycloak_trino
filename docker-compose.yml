@@ -1,3 +1,4 @@
+---
 services:
   liferay:
     image: liferay/portal:7.4.3.19-ga19
@@ -17,6 +18,7 @@ services:
       LIFERAY_JDBC_DEFAULT_USERNAME: ${DATABASE_USERNAME}
       LIFERAY_JDBC_DEFAULT_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
+      - ./mount:/mnt/liferay
       - liferay-data:/opt/liferay/data
       - liferay-osgi-configs:/opt/liferay/osgi/configs
       - liferay-osgi-marketplace:/opt/liferay/osgi/marketplace

@@ -21,17 +21,25 @@ spec:
         image: liferay/portal:7.4.3.19-ga19
         ports: 
           - containerPort: 8080
+          - containerPort: 8000
+          - containerPort: 11311
         env:
           - name: LIFERAY_JVM_OPTS
             value: -Xms8g -Xmx8g -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
           - name: LIFERAY_JDBC_DEFAULT_DRIVER_CLASS_NAME
             value: org.postgresql.Driver
           - name: LIFERAY_JDBC_DEFAULT_URL
-            valueFrom:
-              configMapKeyRef:
-                name: db_url
-                key: DB_URL
+            value: "jdbc:postgresql://postgres:5432/liferay?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false"
           - name: LIFERAY_JDBC_DEFAULT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: postgres-user
+                key: postgres-username
+          - name: LIFERAY_JDBC_DEFAULT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: postgres-password
         resources:
           requests:
             memory: "500Mi"
@@ -40,16 +48,33 @@ spec:
             memory: "500Mi"
             cpu: "500m"
         volumeMounts:
-          - name: apache-template
-            mountPath: /etc/apache2/sites-available/000-default.conf
-            subPath: 000-default.conf
-          - name: port-template
-            mountPath: /etc/apache2/ports.conf
-            subPath: ports.conf
+          - name: liferay-data
+            mountPath: /opt/liferay/data
+          - name: liferay-osgi-configs
+            mountPath: /opt/liferay/osgi/configs
+          - name: liferay-osgi-marketplace
+            mountPath: /opt/liferay/osgi/marketplace
+          - name: liferay-osgi-modules
+            mountPath: /opt/liferay/osgi/modules
+          - name: liferay-osgi-war
+            mountPath: /opt/liferay/osgi/war
       volumes:
-        - name: apache-template
-          configMap:
-            name: apache-template
-        - name: port-template
-          configMap:
-            name: port-template
+        - name: liferay-mount
+          hostPath:
+            path: /mnt/liferay
+            type: Directory
+        - name: liferay-data
+          persistentVolumeClaim:
+            claimName: liferay-data-pvc
+        - name: liferay-osgi-configs
+          persistentVolumeClaim:
+            claimName: liferay-osgi-configs-pvc
+        - name: liferay-osgi-marketplace
+          persistentVolumeClaim:
+            claimName: liferay-osgi-marketplace-pvc
+        - name: liferay-osgi-modules
+          persistentVolumeClaim:
+            claimName: liferay-osgi-modules-pvc
+        - name: liferay-osgi-war
+          persistentVolumeClaim:
+            claimName: liferay-osgi-war-pvc
