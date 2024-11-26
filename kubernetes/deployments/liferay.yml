@@ -29,24 +29,26 @@ spec:
           - name: LIFERAY_JDBC_DEFAULT_DRIVER_CLASS_NAME
             value: org.postgresql.Driver
           - name: LIFERAY_JDBC_DEFAULT_URL
-            value: "jdbc:postgresql://postgres:5432/liferay?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false"
+            value: "jdbc:postgresql://postgres-service:5432/liferay?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false"
           - name: LIFERAY_JDBC_DEFAULT_USERNAME
             valueFrom:
               secretKeyRef:
                 name: postgres-user
                 key: postgres-username
+                optional: false
           - name: LIFERAY_JDBC_DEFAULT_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: postgres-secret
                 key: postgres-password
+                optional: false
         resources:
           requests:
-            memory: "500Mi"
-            cpu: "500m"
+            memory: "2Gi"
+            cpu: "1"
           limits:
-            memory: "500Mi"
-            cpu: "500m"
+            memory: "2Gi"
+            cpu: "1"
         volumeMounts:
           - name: liferay-data
             mountPath: /opt/liferay/data
@@ -61,8 +63,8 @@ spec:
       volumes:
         - name: liferay-mount
           hostPath:
-            path: /mnt/liferay
-            type: Directory
+            path: /mnt/liferay/
+            type: DirectoryOrCreate
         - name: liferay-data
           persistentVolumeClaim:
             claimName: liferay-data-pvc

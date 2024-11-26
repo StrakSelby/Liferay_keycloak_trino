@@ -21,6 +21,7 @@ metadata:
   name: pgdata-pvc
   namespace: default
 spec:
+  storageClassName: ""
   accessModes:
     - ReadWriteOnce
   resources:
