@@ -13,14 +13,14 @@ spec:
       port: 8080
       targetPort: 8080
       nodePort: 30001
-    - name: debug
-      protocol: TCP
-      port: 8000
-      targetPort: 8000
-      nodePort: 30002
-    - name: service
-      protocol: TCP
-      port: 11311
-      targetPort: 11311
-      nodePort: 30003
+    # - name: debug
+    #   protocol: TCP
+    #   port: 8000
+    #   targetPort: 8000
+    #   nodePort: 30002
+    # - name: service
+    #   protocol: TCP
+    #   port: 11311
+    #   targetPort: 11311
+    #   nodePort: 30003
   type: NodePort

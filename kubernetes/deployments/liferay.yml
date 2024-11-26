@@ -21,33 +21,35 @@ spec:
         image: liferay/portal:7.4.3.19-ga19
         ports: 
           - containerPort: 8080
-          - containerPort: 8000
-          - containerPort: 11311
+          # - containerPort: 8000
+          # - containerPort: 11311
         env:
-          - name: LIFERAY_JVM_OPTS
-            value: -Xms8g -Xmx8g -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
-          - name: LIFERAY_JDBC_DEFAULT_DRIVER_CLASS_NAME
+          - name: LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME
             value: org.postgresql.Driver
-          - name: LIFERAY_JDBC_DEFAULT_URL
-            value: "jdbc:postgresql://postgres-service:5432/liferay?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false"
-          - name: LIFERAY_JDBC_DEFAULT_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: postgres-user
-                key: postgres-username
+          - name: LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL
+            valueFrom: 
+              configMapKeyRef:
+                name: postgres-configmap
+                key: database_url
                 optional: false
-          - name: LIFERAY_JDBC_DEFAULT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: postgres-secret
-                key: postgres-password
-                optional: false
+          - name: LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME
+            value: postgres
+            # valueFrom:
+            #   secretKeyRef:
+            #     name: postgres-user
+            #     key: postgres-username
+          - name: LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD
+            value: wElcome.01K
+            # valueFrom:
+            #   secretKeyRef:
+            #     name: postgres-secret
+            #     key: postgres-password
         resources:
           requests:
-            memory: "2Gi"
+            memory: "1Gi"
             cpu: "1"
           limits:
-            memory: "2Gi"
+            memory: "1Gi"
             cpu: "1"
         volumeMounts:
           - name: liferay-data
@@ -63,8 +65,8 @@ spec:
       volumes:
         - name: liferay-mount
           hostPath:
-            path: /mnt/liferay/
-            type: DirectoryOrCreate
+            path: /mnt/liferay
+            type: Directory
         - name: liferay-data
           persistentVolumeClaim:
             claimName: liferay-data-pvc

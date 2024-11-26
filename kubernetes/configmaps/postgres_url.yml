@@ -4,4 +4,4 @@ metadata:
   name: postgres-configmap
   namespace: default
 data:
-  database_url: postgres-service:5432
+  database_url: "jdbc:postgresql://postgres-service:5432/liferay"

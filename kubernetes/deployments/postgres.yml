@@ -20,17 +20,33 @@ spec:
           image: postgres:15.1
           env:
             - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-user
-                  key: postgres-username
-                  optional: false
+              value: wElcome.01K
+              # valueFrom:
+              #   secretKeyRef:
+              #     name: postgres-secret
+              #     key: postgres-password
+              #     optional: false
             - name: POSTGRES_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: postgres-password
-                  optional: false
+              value: postgres
+              # valueFrom:
+                # secretKeyRef:
+                #   name: postgres-user
+                #   key:  postgres-username
+                #   optional: false
+            - name: PG_USER
+              value: postgres
+              # valueFrom:
+              #   secretKeyRef:
+              #     name: postgres-user
+              #     key:  postgres-username
+              #     optional: false
+            - name: PG_PASS
+              value: wElcome.01K
+              # valueFrom:
+              #   secretKeyRef:
+              #     name: postgres-secret
+              #     key:  postgres-password
+              #     optional: false
             - name: POSTGRES_DB
               value: liferay
           resources:
