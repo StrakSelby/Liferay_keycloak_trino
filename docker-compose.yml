@@ -19,7 +19,7 @@ services:
       LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME: ${DATABASE_USERNAME}
       LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
-      #- ./mount:/mnt/liferay
+      - ./mount:/mnt/liferay
       - liferay-data:/opt/liferay/data
       - liferay-osgi-configs:/opt/liferay/osgi/configs
       - liferay-osgi-marketplace:/opt/liferay/osgi/marketplace

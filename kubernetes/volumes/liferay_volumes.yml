@@ -12,7 +12,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /mnt/data
+    path: /opt/liferay/data/document_library  # Changed from /mnt/liferay/data
 
 ---
 apiVersion: v1
@@ -42,7 +42,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /mnt/data
+    path: /opt/liferay/osgi-configs  # Changed from /mnt/liferay/osgi-configs
 
 ---
 apiVersion: v1
@@ -72,7 +72,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /mnt/data
+    path: /opt/liferay/osgi-marketplace/override  # Changed from /mnt/liferay/osgi-marketplace
 
 ---
 apiVersion: v1
@@ -102,7 +102,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /mnt/data
+    path: /opt/liferay/osgi-modules  # Changed from /mnt/liferay/osgi-modules
 
 ---
 apiVersion: v1
@@ -132,7 +132,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /mnt/data
+    path: /opt/liferay/osgi-war  # Changed from /mnt/liferay/osgi-war
 
 ---
 apiVersion: v1

@@ -19,8 +19,8 @@ deploy_liferay:
 	kubectl apply -f kubernetes/volumes/postgres_volume.yml 
 	kubectl apply -f kubernetes/volumes/liferay_volumes.yml
 	kubectl apply -f kubernetes/configmaps/postgres_url.yml
-	kubectl apply -f kubernetes/deployments/liferay.yml
 	kubectl apply -f kubernetes/deployments/postgres.yml
+	kubectl apply -f kubernetes/deployments/liferay.yml
 
 delete_liferay:
 	kubectl delete -f kubernetes/deployments/liferay.yml
