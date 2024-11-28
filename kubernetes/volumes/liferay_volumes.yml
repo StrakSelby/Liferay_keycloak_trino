@@ -1,54 +1,24 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: liferay-data-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: liferay-osgi-configs-pvc
+  name: liferay-data
+  namespace: default
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi 
+      storage: 2Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: liferay-osgi-marketplace-pvc
+  name: liferay-config
+  namespace: default
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi 
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: liferay-osgi-modules-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi 
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: liferay-osgi-war-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi 
+      storage: 2Gi
