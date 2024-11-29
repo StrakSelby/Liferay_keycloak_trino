@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:15.1
+          image: postgres:latest
           env:
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -46,11 +46,11 @@ spec:
             - name: PGHOST
           resources:
             limits:
-              cpu: "1"
-              memory: "1Gi"
+              cpu: "500m"
+              memory: "500Mi"
             requests:
-              cpu: "1"
-              memory: "1Gi"
+              cpu: "500m"
+              memory: "500Mi"
           ports:
             - containerPort: 5432
           volumeMounts:
