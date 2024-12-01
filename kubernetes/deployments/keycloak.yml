@@ -17,10 +17,33 @@ spec:
         image: quay.io/keycloak/keycloak:26.0.5
         env:
           - name: KC_DB
-            value: 
+            value: mariadb
           - name: KC_DB_USERNAME
-            value:
-          - name: 
+            # value: root
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-user
+                key:  mariadb-username
+          - name: KC_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-secret
+                key: mariadb-root-password
+          - name: KC_DB_URL_HOST
+            value: mariadb-service
+          - name: KC_DB_URL_PORT
+            value: "3306"
+          - name: KC_DB_URL_DATABASE
+            value: keycloakDB
+          - name: KEYCLOAK_ADMIN
+            value: keycloak
+          - name: KEYCLOAK_ADMIN_PASSWORD
+            value: keycloak
+          - name: KC_HOSTNAME_PORT
+            value: "8081"
+          - name: KC_LOG_LEVEL
+            value: info
+        command: ["/opt/keycloak/bin/kc.sh", "start-dev", "--http-port", "8081"]
         resources:
           limits:
             memory: "1Gi"

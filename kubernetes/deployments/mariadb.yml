@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,10 +20,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "1"
+            cpu: "500m"
           limits:
             memory: "512Mi"
-            cpu: "1"
+            cpu: "500m"
         ports:
         - containerPort: 3306 
         env:
@@ -31,11 +32,13 @@ spec:
             secretKeyRef:
               name: mariadb-secret
               key: mariadb-root-password
-              optional: false
         - name: MARIADB_DATABASE
-          value: wordpress
+          value: keycloakDB
         - name: MARIADB_USER
-          value: root
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-user
+              key:  mariadb-username
         volumeMounts:
         - name: mariadb-pv
           mountPath: /var/lib/mysql
