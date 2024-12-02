@@ -1,4 +1,5 @@
 deploy_ingress:
+	kubectl apply -f kubernetes/ingress/ingress.yml
 	kubectl apply -f traefik/role.yml
 	kubectl apply -f traefik/role-binding.yml
 	kubectl apply -f traefik/serviceaccount.yml
