@@ -1,5 +1,0 @@
-plugin: kubernetes.core.k8s
-api_version: v1
-connections:
-  - namespaces:
-      - "{{ namespaces }}"
