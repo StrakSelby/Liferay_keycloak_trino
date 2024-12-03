@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: postgres-configmap
-  namespace: default
-data:
-  # database_url: "jdbc:postgresql://postgres-service:5432/liferay"
-    database_url: postgres-service:5432
